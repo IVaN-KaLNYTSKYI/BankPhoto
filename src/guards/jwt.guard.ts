@@ -5,10 +5,7 @@ import { AppConfig } from '../common/app-config';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(
-    private jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
@@ -22,7 +19,7 @@ export class JwtGuard implements CanActivate {
       const { payload } = this.jwtService.verify(token, {
         secret: AppConfig.jwt.accessTokenSecret,
       });
-      request.user = { userId: payload.id, profileId: payload.profileId };
+      request.user = { userId: payload.id, email: payload.email };
 
       return true;
     } catch (error) {
